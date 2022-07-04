@@ -4,6 +4,8 @@ import com.elitesapiens.enums.LampadaStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,6 +15,7 @@ class LampadaTest {
     @BeforeEach
     void setUp() {
         this.lampada = new Lampada();
+        this.lampada.setClicks(1000);
     }
 
     @Nested
@@ -38,8 +41,8 @@ class LampadaTest {
         }
 
         @Test
-        void deveRetornarQueimadaQuandoForLigadaMaisDe1000Vezes() {
-            for (int i = 0; i <= 2001; i++) {
+        void deveRetornarQueimadaQuandoForAcionadaMaisDe1000Vezes() {
+            for (int i = 0; i <= 1000; i++) {
                 lampada.apertarInterruptor();
             }
             assertEquals(LampadaStatus.QUEIMADA, lampada.getStatus());
@@ -51,6 +54,18 @@ class LampadaTest {
                 lampada.apertarInterruptor();
             }
             assertEquals(LampadaStatus.DESLIGADA, lampada.getStatus());
+        }
+
+        @ParameterizedTest(name = "Quantidade de clicks: {0}")
+        @CsvFileSource(resources = "/interruptor.csv", numLinesToSkip = 1)
+        void deveSempreRetornarQueimadaComAQuantidadeDeApertosInformada(int quantidade) {
+            lampada.setClicks(quantidade);
+
+            for (int i = 0; i <= quantidade; i++) {
+                lampada.apertarInterruptor();
+            }
+
+            assertEquals(LampadaStatus.QUEIMADA, lampada.getStatus());
         }
 
     }

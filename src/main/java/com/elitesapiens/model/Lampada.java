@@ -26,16 +26,17 @@ public class Lampada implements ILampada {
             this.status = LampadaStatus.QUEIMADA;
         }
         else if (interruptor.ligar(this)) {
-            this.clicks++;
+            this.clicks--;
             this.status = LampadaStatus.LIGADA;
         }
         else {
+            this.clicks--;
             this.status = LampadaStatus.DESLIGADA;
         }
     }
 
     private boolean isQueimada() {
-        return this.clicks > 1000;
+        return this.clicks <= 0;
     }
 
 }
